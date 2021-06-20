@@ -110,13 +110,59 @@ Forumlarz do dodawania notatek:
 
 ![image](doc/add-note-form.png)
 
-## 6. Podsumowanie
+## 6. Lokalne uruchomienie projektu
+
+### 6.1 Serwer
+
+Wymagania: 
+* Visual Studio 2019 ze wsparciem dla .NET 5.0
+* MSSQL Server 2019 z zainstalowanym dodatkem do obsługi Full-Text Search
+
+Instrukcje:
+1. Sklonować repozytorium z kodem źródłowym:
+```
+$ git clone https://github.com/Fadikk367/Notes-server.git
+```
+2. Uruchomić skrypty sql z katalogu */sql* w podanej kolejności w celu utworzenia bazy danych wraz z niezbędną strukturą oraz przykładowymi danymi
+
+3. Uruchomić projekt w środowisku Visual Studio 2019
+
+API zostanie wystawione pod adresem:
+```
+http://localhost:28410
+```
+
+### 6.2 Klient
+
+Wymagania: 
+* Node.js v14+
+
+Instrukcje:
+1. Sklonować repozytorium z kodem źródłowym:
+```
+$ git clone https://github.com/Fadikk367/Notes-client.git
+```
+2. Z poziomu katalogu głównego wywołać komendę:
+```
+$ npm install
+```
+
+3. Następnie:
+```
+$ npm start
+```
+
+Aplikacja zostanie uruchomiona na lokalnym porcie 3000:
+```
+http://localhost:28410
+```
+## 7. Podsumowanie
 
 Technologia Full-Text Search pozwala na wydajne przeszukiwanie danych tekstowych (w tym CLOB) pod kątem występowania danych słów czy fraz. W porównaniu do operatora LIKE, FTS wypada znacznie lepiej, tymbardziej jeśli mamy do czynienia ze znacznymi ilościami rekordów zawierających dane tekstowe. Aby móc wdrożyć tą technologię do swojej bazy danych należy zadbać o instalację dodatkowego komponentu FullText Search.
 
 W zaprezentowanej aplikacji FTS została wykorzystana w celu przeszukiwania dostępnych notatek pod kątem pożądanych słów kluczowych czy nawet występowania całych fraz.
 
-## 7. Źródła
+## 8. Źródła
  * [Dokumentacja ASP.NET](https://docs.microsoft.com/pl-pl/aspnet/core/?view=aspnetcore-5.0)
  * [MSSQL Server 2019](https://www.microsoft.com/pl-pl/sql-server/sql-server-2019)
  * [Technologia Full-Text Search](https://docs.microsoft.com/en-us/sql/relational-databases/search/full-text-search?view=sql-server-ver15)
