@@ -1,6 +1,6 @@
 # Notes - Dokumentacja projektu zaliczeniowego z przedmiotu Bazy Danch 2
 
-# 1. Opis projektu
+## 1. Opis projektu
 
 ### Temat:
 > Przetwarzanie danych typu CLOB. Opracować API i jego implementację do przetwarzania danych typu CLOB. W ramach projektu można wykorzystać typ danych CLOB oraz technologię wyszukiwania pełnotekstowe FTS. Opracowane API powinno umożliwić zapis i usunięcie wybranego dokumentu oraz wyszukanie określonej informacji w dokumentach umieszczonych w repozytorium.
@@ -9,13 +9,17 @@
 
 > Notes - Aplikacja webowa służąca do zarządzania i przeglądnaia notatek, które są pogrupowane na różne przedmioty. REST API udostępnia operacje do zarządzania przedmiotami oraz notatkami. Opcja wyszukiwania notatek zawierających zadaną frazę (FTS).
 
-# 2. Endpointy i typy danych
+### DEMO APLIKACJI => [LINK](https://fadikk367.github.io/Notes-client)*
+### **UWAGA !!!**
+*Z racji darmowego hostingu na Azure, backend aplikacji potrzebuje chwili na rozruch po okresie uśpienia więc przy pierwszym wejściu należy chwilę poczekać na załadowanie danych.*
+
+## 2. Endpointy i typy danych
 
 Poniższe zdjęcie pochodzące z narzędzia go automatycznego generowania dokumentuji do API - Swagger - przedstawia endpointy wystawione przez serwer:
 
 ![image](doc/swagger-endpoints.png)
 
-Dane zwracane w zapytania typu GET kształtują się zgodnie ze zdefiniowanymi w projekcie klasami, zaprezentowanymi w uproszczeniu na zdjęciu poniżej. W przypadku endpointów zakończonych parametrem *{id}* zwracane są pojedyncze obiekty o odpowiedniego typu a w przypadku zapytań GET o ogólnej formie np. */Subject* lub */Subject/{id}/Notes* zwracane są listy obiektów.
+Dane zwracane w zapytaniach typu GET kształtują się zgodnie ze zdefiniowanymi w projekcie klasami, zaprezentowanymi w uproszczeniu na zdjęciu poniżej. W przypadku endpointów zakończonych parametrem *{id}* zwracane są pojedyncze obiekty odpowiedniego typu a w przypadku zapytań GET o ogólnej formie np. */Subject* lub */Subject/{id}/Notes* zwracane są listy obiektów.
 
 ```c#
 class Subject {
@@ -33,9 +37,9 @@ class Note {
 }
 ```
 
-Przedstawiony powyżej klasy określajacy typy danych, są automatycznie mapowane na tabele w bazie danych dzięki uprzejmości frameworka *Entity Framework*.
+Przedstawione powyżej klasy określające typy danych, są automatycznie mapowane na tabele w bazie danych dzięki uprzejmości frameworka *Entity Framework*.
 
-Jeśli chodzi o dane oczekiwane w zapytania typu POST opisane są przez specjalne klasy DTO (Data Transfer Object):
+Jeśli chodzi o dane oczekiwane w zapytaniach typu POST opisane są przez specjalne klasy DTO (Data Transfer Object):
 
 ```c#
 class SubjectDTO {
@@ -54,11 +58,11 @@ class NoteDTO {
 
 ### 3.2 Baza Danych
 
-Wykorzystaną bazą danych jest oczywiście SQL Server 2019. Z racji specyfiki wybranego tematu projektu niezbędne jest rownież doinstalowanie dodatkowej usługi Full-Text-Search.
+Wykorzystaną bazą danych jest oczywiście SQL Server 2019. Z racji specyfiki wybranego tematu projektu niezbędne jest rownież doinstalowanie dodatkowej usługi *Full-Text Search*.
 
-W strukturze bazy danych wyspują jedynie dwie tabele: Subjects, Notes, połączone relacją jeden do wielu.
+W strukturze bazy danych występują jedynie dwie tabele: Subjects oraz Notes, połączone relacją jeden do wielu.
 
-Full-Text-Index utworzony został dla kolumny *Content* tabeli Notes, która przechowuje właściwe treści przechowywanych notatek czy definicji, które mogą osiągać znaczne rozmiary.
+Full-Text Index utworzony został dla kolumny *Content* tabeli Notes, która przechowuje właściwe treści przechowywanych notatek czy definicji, które mogą osiągać znaczne rozmiary.
 
 ### 3.2 Serwer
 
@@ -66,15 +70,19 @@ Serwerowa część apliakcji zaimplementowała została w technologii ASP.NET Co
 
 Operacje na bazie danych, a dokładnie na jej kontekście (DbContext) wykonywane są z poziomu repozytoriów, które obsługują konkretne rodzaje zapytań i są wykorzystywane w kontrolerach.
 
-Jako że projekt jest bardzo mały nie podjęto decyzji na wprowadzenie dodatkowej warstwy abstrakcji pomiędzy kontrolery a repozytoria (serwisy).
+Jako że projekt jest bardzo mały, podjęto decyzję aby nie wprowadzać dodatkowej warstwy abstrakcji pomiędzy kontrolerami a repozytoriami (serwisy).
+
+> [Repozytorium z kodem serwera](https://github.com/Fadikk367/Notes-server)
 
 ### 3.3 Klient
 
-Jako klienta stworzonego API webowgo zaproponowano prosty prototyp aplikacji webowej napisany przy uzyciu biblioteki *React*. Aplikacja posiada jedynie trzy widoki: główny - prezentujący dostępne przedmioty, widok konkretnego przedmiotu z widoczynmi odnoszącymi się do niego notatkami oraz informacyjny - zawierajacy podstawowe informacje a aplikacji  
+Jako klienta stworzonego API webowgo zaproponowano prosty prototyp aplikacji webowej napisany przy użyciu biblioteki *React*. Aplikacja posiada jedynie trzy widoki: główny - prezentujący dostępne przedmioty, widok konkretnego przedmiotu z widoczynmi odnoszącymi się do niego notatkami oraz informacyjny - zawierajacy podstawowe informacje o aplikacji oraz linki.
+
+> [Repozytorium z kodem klienta](https://github.com/Fadikk367/Notes-client)
 
 ##  4. Testy
 
-Z racji tworzenia w ramach projekty API webowego typu REST skupiono się na testach integracyjnych, testujących działanie dostępnych endpointów. Poniżej zamiszczony został screen shot z rezultatem uruchomienia testów serwerowej części projektu:
+Z racji tworzenia w ramach projektu API webowego typu REST skupiono się na testach integracyjnych, testujących działanie dostępnych endpointów. Poniżej zamieszczony został screen shot z rezultatem uruchomienia testów serwerowej części projektu:
 
 ![image](doc/integration-tests-result.png)
 
@@ -82,7 +90,7 @@ Z racji tworzenia w ramach projekty API webowego typu REST skupiono się na test
 ## 5. Interfejs Aplikacji
 
 
-Strona główa, przedstawiająca dostepne przedmioty, do których przypisane są dalej poszczególne notatki:
+Strona główa, przedstawiająca dostepne przedmioty, do których przypisane są poszczególne notatki:
 
 ![image](doc/home-page.png)
 
@@ -98,13 +106,13 @@ Podstrona informacyjna:
 
 ![image](doc/about-page.png)
 
-Forumlarz do dodawanai notatek:
+Forumlarz do dodawania notatek:
 
 ![image](doc/add-note-form.png)
 
 ## 6. Podsumowanie
 
-Technologia Full-Text Search pozwala na wydajne przeszukiwanie danych tekstowych (w tym CLOB) pod kątem występowania danych słów czy fraz. W porównaniu do operatora LIKE, FTS wybada znacznie lepiej, tymbardziej jeśli mamy do czynienia ze znacznymi ilościami rekordów zawierających dane tekstowe. Aby móc wdrożyć tą technologię do swojej bazy danych należy zadbać o instalację dodatkowego komponentu FullText Search.
+Technologia Full-Text Search pozwala na wydajne przeszukiwanie danych tekstowych (w tym CLOB) pod kątem występowania danych słów czy fraz. W porównaniu do operatora LIKE, FTS wypada znacznie lepiej, tymbardziej jeśli mamy do czynienia ze znacznymi ilościami rekordów zawierających dane tekstowe. Aby móc wdrożyć tą technologię do swojej bazy danych należy zadbać o instalację dodatkowego komponentu FullText Search.
 
 W zaprezentowanej aplikacji FTS została wykorzystana w celu przeszukiwania dostępnych notatek pod kątem pożądanych słów kluczowych czy nawet występowania całych fraz.
 
