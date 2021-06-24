@@ -5,6 +5,21 @@
 ### Temat:
 > Przetwarzanie danych typu CLOB. Opracować API i jego implementację do przetwarzania danych typu CLOB. W ramach projektu można wykorzystać typ danych CLOB oraz technologię wyszukiwania pełnotekstowe FTS. Opracowane API powinno umożliwić zapis i usunięcie wybranego dokumentu oraz wyszukanie określonej informacji w dokumentach umieszczonych w repozytorium.
 
+### Wprowadzenie teoretyczne 
+
+W SQL Server dane typu CLOB przetrzymywane są za pomocą typu nvarchar(max), który może przechowywać do 2GB danych tekstowych. Przeszukiwania pełnotekstowe (Full-Text Search) są wykonywane na indeksach pełnotekstowych (Full-Text Index) a więc aby umożliwić wykonywanie takich zapytań najpierw należy zadbać o utworzenie takiego indeksu.
+
+Indeks pełnotekstowy to specjalna forma indeksu, która przechowywana jest w specjalnym wirtualnym kontenerze zwanym katalogiem pełnoteksowym (Full-Text Catalog). Jeden katalog może zawierać wiele indeksów ale jeden indeks może należeć tylko do jednego katalogu. Kolejnym ograniczeniem jest tylko jeden indeks pełnotekstowy dla tabeli.
+
+Zapytania pełnotekstowe (Full-Text Query) mogą dotyczyć między innymi:
+* jednego lub więcej konkretnych słów,
+* słów rozpoczynających się od określonego tekstu (prefiksy)
+* form fleksyjnych słowa, np dla słowa: drzwi: *drzwi, drzwiom, drzwiami i drzwiach*
+* słów zbliżonych do zadanego wyrażenia
+* synonimów
+
+Dla FTS nie jest rozróżniana wielkość liter a realizację zapytań wykonujemy poprzez niewielki zestaw predykatów: CONTAINS, FREETEXT (T-SQL) oraz CONTAINSTABLE i FREETEXTTABLE (funkcje).
+
 ### Propozycja rozwiązania:
 
 > Notes - Aplikacja webowa służąca do zarządzania i przeglądnaia notatek, które są pogrupowane na różne przedmioty. REST API udostępnia operacje do zarządzania przedmiotami oraz notatkami. Opcja wyszukiwania notatek zawierających zadaną frazę (FTS).
@@ -63,6 +78,22 @@ Wykorzystaną bazą danych jest oczywiście SQL Server 2019. Z racji specyfiki w
 W strukturze bazy danych występują jedynie dwie tabele: Subjects oraz Notes, połączone relacją jeden do wielu.
 
 Full-Text Index utworzony został dla kolumny *Content* tabeli Notes, która przechowuje właściwe treści przechowywanych notatek czy definicji, które mogą osiągać znaczne rozmiary.
+
+W celu utworzenia indeksu pełnotekstowego stworzony został najpierw katalog pełnotekstowy *notes_catalog*:
+
+```sql
+CREATE FULLTEXT CATALOG [notes_catalog] WITH ACCENT_SENSITIVITY = ON
+AS DEFAULT
+```
+
+a następnie na tym katalogu dodany został wspomniany indeks:
+
+```sql
+CREATE FULLTEXT INDEX ON [dbo].[Notes]
+    ([Content] LANGUAGE 2057)
+    KEY INDEX [PK_Notes]
+    ON [notes_catalog];
+```
 
 ### 3.2 Serwer
 
